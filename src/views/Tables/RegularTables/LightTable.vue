@@ -80,6 +80,8 @@
 <script>
   import projects from './../projects'
   import { Table, TableColumn} from 'element-ui'
+
+
   export default {
     name: 'light-table',
     components: {

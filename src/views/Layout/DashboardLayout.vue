@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <notifications></notifications>
-    <side-bar>
+    <side-bar v-if="this.$sidebar.showSidebar">
       <template slot="links">
         <sidebar-item
           :link="{

@@ -9,9 +9,11 @@
     "dev": "npm run serve"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "bootstrap": "4.3.1",
     "bootstrap-vue": "^2.5.0",
     "chart.js": "^2.9.3",
+    "crypto-js": "^4.0.0",
     "d3": "^5.7.0",
     "datamaps": "^0.5.9",
     "date-fns": "^1.30.1",

@@ -4,58 +4,102 @@
     <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success">
       <!-- Card stats -->
       <b-row>
-        <b-col xl="3" md="6">
-          <stats-card title="Total traffic"
-                      type="gradient-red"
-                      sub-title="350,897"
-                      icon="ni ni-active-40"
-                      class="mb-4">
+        <b-col md="6">
+          <b-row>
+            <b-col xl="4" md="12">
+              <h2>Portfolio Value</h2>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col xl="4" md="12">
+              <stats-card title="In USDT"
+                          type="gradient-green"
+                          sub-title="350,897"
+                          icon="fas fa-dollar-sign"
+                          class="mb-4">
 
-            <template slot="footer">
-              <span class="text-success mr-2">3.48%</span>
-              <span class="text-nowrap">Since last month</span>
-            </template>
-          </stats-card>
+                <!-- <template slot="footer">
+                  <span class="text-success mr-2">3.48%</span>
+                  <span class="text-nowrap">Since last month</span>
+                </template> -->
+              </stats-card>
+            </b-col>
+            <b-col xl="4" md="12">
+              <stats-card title="In BTC"
+                          type="gradient-orange"
+                          sub-title="2,356"
+                          icon="fab fa-btc"
+                          class="mb-4">
+
+                <!-- <template slot="footer">
+                  <span class="text-success mr-2">12.18%</span>
+                  <span class="text-nowrap">Since last month</span>
+                </template> -->
+              </stats-card>
+            </b-col>
+            <b-col xl="4" md="12">
+              <stats-card title="In ETH"
+                          type="gradient-blue"
+                          sub-title="2,356"
+                          icon="fab fa-ethereum"
+                          class="mb-4">
+
+                <!-- <template slot="footer">
+                  <span class="text-success mr-2">12.18%</span>
+                  <span class="text-nowrap">Since last month</span>
+                </template> -->
+              </stats-card>
+            </b-col>
+          </b-row>
         </b-col>
-        <b-col xl="3" md="6">
-          <stats-card title="Total traffic"
-                      type="gradient-orange"
-                      sub-title="2,356"
-                      icon="ni ni-chart-pie-35"
-                      class="mb-4">
+        <b-col md="6">
+          <b-row>
+            <b-col xl="4" md="12">
+              <h2>Profit and Loss</h2>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col xl="4" md="12">
+              <stats-card title="Last 7 days"
+                          type="gradient-pink"
+                          sub-title="$924"
+                          icon="fas fa-hand-holding-usd"
+                          class="mb-4">
 
-            <template slot="footer">
-              <span class="text-success mr-2">12.18%</span>
-              <span class="text-nowrap">Since last month</span>
-            </template>
-          </stats-card>
-        </b-col>
-        <b-col xl="3" md="6">
-          <stats-card title="Sales"
-                      type="gradient-green"
-                      sub-title="924"
-                      icon="ni ni-money-coins"
-                      class="mb-4">
+                <!-- <template slot="footer">
+                  <span class="text-danger mr-2">5.72%</span>
+                  <span class="text-nowrap">Since last month</span>
+                </template> -->
+              </stats-card>
+            </b-col>
+            <b-col xl="4" md="12">
+              <stats-card title="Last 30 days"
+                          type="gradient-red"
+                          sub-title="$924"
+                          icon="ni ni-money-coins"
+                          class="mb-4">
 
-            <template slot="footer">
-              <span class="text-danger mr-2">5.72%</span>
-              <span class="text-nowrap">Since last month</span>
-            </template>
-          </stats-card>
+                <!-- <template slot="footer">
+                  <span class="text-danger mr-2">5.72%</span>
+                  <span class="text-nowrap">Since last month</span>
+                </template> -->
+              </stats-card>
 
-        </b-col>
-        <b-col xl="3" md="6">
-          <stats-card title="Performance"
-                      type="gradient-info"
-                      sub-title="49,65%"
-                      icon="ni ni-chart-bar-32"
-                      class="mb-4">
+            </b-col>
+            <b-col xl="4" md="12">
+              <stats-card title="Overall"
+                          type="gradient-info"
+                          sub-title="$2985"
+                          icon="ni ni-chart-bar-32"
+                          class="mb-4">
 
-            <template slot="footer">
-              <span class="text-success mr-2">54.8%</span>
-              <span class="text-nowrap">Since last month</span>
-            </template>
-          </stats-card>
+                <!-- <template slot="footer">
+                  <span class="text-success mr-2">54.8%</span>
+                  <span class="text-nowrap">Since last month</span>
+                </template> -->
+              </stats-card>
+            </b-col>
+          </b-row>
         </b-col>
       </b-row>
     </base-header>
@@ -148,6 +192,9 @@
   // Tables
   import SocialTrafficTable from './Dashboard/SocialTrafficTable';
   import PageVisitsTable from './Dashboard/PageVisitsTable';
+  import ftx from '../endpoints/ftx'
+
+  ftx.getAccountInformation().then(console.log).catch(console.error)
 
   export default {
     components: {

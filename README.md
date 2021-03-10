@@ -147,7 +147,7 @@ Within the download you'll find the following directories and files:
         |   |   |-- Tab.vue
         |   |   |-- Tabs.vue
         |-- directives
-        |   |-- click-ouside.js
+        |   |-- click-outside.js
         |-- plugins
         |   |-- dashboard-plugin.js
         |   |-- globalComponents.js

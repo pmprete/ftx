@@ -39,7 +39,7 @@
                     <img alt="Image placeholder" src="img/theme/team-4.jpg">
                   </span>
             <b-media-body class="ml-2 d-none d-lg-block">
-              <span class="mb-0 text-sm  font-weight-bold">John Snow</span>
+              <span class="mb-0 text-sm  font-weight-bold">{{username}}</span>
             </b-media-body>
           </b-media>
         </a>
@@ -79,6 +79,7 @@
 <script>
 import { CollapseTransition } from 'vue2-transitions';
 import { BaseNav, Modal } from '@/components';
+import ftx from '../../endpoints/ftx'
 
 export default {
   components: {
@@ -104,7 +105,8 @@ export default {
       activeNotifications: false,
       showMenu: false,
       searchModalVisible: false,
-      searchQuery: ''
+      searchQuery: '',
+      username: '',
     };
   },
   methods: {
@@ -117,6 +119,10 @@ export default {
     closeDropDown() {
       this.activeNotifications = false;
     }
+  },
+  async created() {
+    const accountInfo = await ftx.getAccountInformation();
+    this.username = accountInfo.username;
   }
 };
 </script>
