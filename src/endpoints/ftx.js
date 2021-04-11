@@ -6,12 +6,11 @@ import hmacSHA256 from 'crypto-js/hmac-sha256';
 async function getMarketPrice(market) {
     try {
       const response = await axios.get(`${process.env.VUE_APP_ENDPOINT_URL}/api/markets/${market}`);
-      console.log(response);
       //Take result?.price
+      return response.data.result;
     } catch (error) {
       console.error(error);
     }
-    return response;
 }
 
 async function getBtcPrice() {
@@ -26,20 +25,24 @@ async function getUsdtPrice() {
     return getMarketPrice('USDT/USD');
 }
 
-// https://docs.ftx.com/?javascript#get-options-positions
-async function getOptionsPosition() {
-    const ts = Date.now();
-    const path_url = '/api/options/positions';
-    const signature_payload = `${ts}GET${path_url}`;
-    const signature = hmacSHA256(signature_payload, process.env.VUE_APP_API_SECRET).toString();
-    const response = await axios.get(`${process.env.VUE_APP_ENDPOINT_URL}${path_url}`, {
+function createHeaders(ts, signature) {
+  return {
       headers: {
         'FTX-KEY': process.env.VUE_APP_API_KEY,
         'FTX-SIGN': signature,
         'FTX-TS': ts.toString(),
         'FTX-SUBACCOUNT': process.env.VUE_APP_API_SUBACCOUNT
       }
-    });
+    }
+}
+// https://docs.ftx.com/?javascript#get-options-positions
+async function getOptionsPosition() {
+    const ts = Date.now();
+    const path_url = '/api/options/positions';
+    const signature_payload = `${ts}GET${path_url}`;
+    const signature = hmacSHA256(signature_payload, process.env.VUE_APP_API_SECRET).toString();
+    const headers = createHeaders(ts, signature);
+    const response = await axios.get(`${process.env.VUE_APP_ENDPOINT_URL}${path_url}`,headers );
     return response.data.result;
 }
 
@@ -48,25 +51,18 @@ async function getAccountInformation() {
   const path_url = '/api/account';
   const signature_payload = `${ts}GET${path_url}`;
   const signature = hmacSHA256(signature_payload, process.env.VUE_APP_API_SECRET).toString();
-  const response = await axios.get(`${process.env.VUE_APP_ENDPOINT_URL}${path_url}`, {
-    headers: {
-      'FTX-KEY': process.env.VUE_APP_API_KEY,
-      'FTX-SIGN': signature,
-      'FTX-TS': ts.toString(),
-      'FTX-SUBACCOUNT': process.env.VUE_APP_API_SUBACCOUNT
-    }
-  });
+  const headers = createHeaders(ts, signature);
+  const response = await axios.get(`${process.env.VUE_APP_ENDPOINT_URL}${path_url}`, headers);
   return response.data.result;
 }
 
 async function get24hOptionVolume() {
     try {
       const response = await axios.get(`${process.env.VUE_APP_ENDPOINT_URL}/api/stats/24h_options_volume`);
-      console.log(response);
+      return response.data.result
     } catch (error) {
       console.error(error);
     }
-    return response;
 }
 
 // async function getOpenOrders() {

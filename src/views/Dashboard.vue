@@ -12,9 +12,9 @@
           </b-row>
           <b-row>
             <b-col xl="4" md="12">
-              <stats-card title="In USDT"
+              <stats-card title="In USD"
                           type="gradient-green"
-                          sub-title="350,897"
+                          :sub-title="portfolioValueInUsd"
                           icon="fas fa-dollar-sign"
                           class="mb-4">
 
@@ -27,7 +27,7 @@
             <b-col xl="4" md="12">
               <stats-card title="In BTC"
                           type="gradient-orange"
-                          sub-title="2,356"
+                          :sub-title="portfolioValueInBtc"
                           icon="fab fa-btc"
                           class="mb-4">
 
@@ -40,7 +40,7 @@
             <b-col xl="4" md="12">
               <stats-card title="In ETH"
                           type="gradient-blue"
-                          sub-title="2,356"
+                          :sub-title="portfolioValueInEth"
                           icon="fab fa-ethereum"
                           class="mb-4">
 
@@ -194,8 +194,6 @@
   import PageVisitsTable from './Dashboard/PageVisitsTable';
   import ftx from '../endpoints/ftx'
 
-  ftx.getAccountInformation().then(console.log).catch(console.error)
-
   export default {
     components: {
       LineChart,
@@ -207,6 +205,9 @@
     },
     data() {
       return {
+        portfolioValue: 0,
+        ethPrice: 0,
+        btcPrice: 0,
         bigLineChart: {
           allData: [
             [0, 20, 10, 30, 15, 40, 20, 60, 60],
@@ -236,6 +237,17 @@
         }
       };
     },
+    computed: {
+      portfolioValueInUsd() {
+        return (this.portfolioValue).toFixed(2)
+      },
+      portfolioValueInEth() {
+        return (this.portfolioValue / this.ethPrice).toFixed(2)
+      },
+      portfolioValueInBtc() {
+        return (this.portfolioValue / this.btcPrice).toFixed(2)
+      },
+    },
     methods: {
       initBigChart(index) {
         let chartData = {
@@ -252,7 +264,16 @@
       }
     },
     mounted() {
-      this.initBigChart(0);
+      this.initBigChart(0)
+      ftx.getAccountInformation().then(() => {
+        this.portfolioValue = totalAccountValue
+      })
+      ftx.getMarketPrice('BTC/USD').then((result) => {
+        this.btcPrice = result.last
+      })
+      ftx.getMarketPrice('ETH/USD').then((result) => {
+        this.ethPrice = result.last
+      })
     }
   };
 </script>
