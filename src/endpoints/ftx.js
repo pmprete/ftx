@@ -31,24 +31,15 @@ function createHeaders(ts, signature) {
         'FTX-KEY': process.env.VUE_APP_API_KEY,
         'FTX-SIGN': signature,
         'FTX-TS': ts.toString(),
-        'FTX-SUBACCOUNT': process.env.VUE_APP_API_SUBACCOUNT
+        'FTX-SUBACCOUNT': process.env.VUE_APP_API_SUBACCOUNT,
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
       }
     }
 }
-// https://docs.ftx.com/?javascript#get-options-positions
-async function getOptionsPosition() {
-    const ts = Date.now();
-    const path_url = '/api/options/positions';
-    const signature_payload = `${ts}GET${path_url}`;
-    const signature = hmacSHA256(signature_payload, process.env.VUE_APP_API_SECRET).toString();
-    const headers = createHeaders(ts, signature);
-    const response = await axios.get(`${process.env.VUE_APP_ENDPOINT_URL}${path_url}`,headers );
-    return response.data.result;
-}
 
-async function getAccountInformation() {
+async function getFromFTX(path_url) {
   const ts = Date.now();
-  const path_url = '/api/account';
   const signature_payload = `${ts}GET${path_url}`;
   const signature = hmacSHA256(signature_payload, process.env.VUE_APP_API_SECRET).toString();
   const headers = createHeaders(ts, signature);
@@ -56,72 +47,65 @@ async function getAccountInformation() {
   return response.data.result;
 }
 
-async function get24hOptionVolume() {
-    try {
-      const response = await axios.get(`${process.env.VUE_APP_ENDPOINT_URL}/api/stats/24h_options_volume`);
-      return response.data.result
-    } catch (error) {
-      console.error(error);
-    }
+// https://docs.ftx.com/?javascript#get-options-positions
+async function getOptionsPosition() {
+    const path_url = '/api/options/positions';
+    return getFromFTX(path_url);
 }
 
-// async function getOpenOrders() {
-//     try {
-//       const response = await axios.get(`${process.env.VUE_APP_ENDPOINT_URL}/api/orders`);
-//       console.log(response);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//     return response;
-// }
+// https://docs.ftx.com/#get-account-information
+async function getAccountInformation() {
+  const path_url = '/api/account';
+  return getFromFTX(path_url);
+}
+
+// Same positions that comes from Account Information
+// https://docs.ftx.com/#get-positions
+async function getPositions() {
+  const path_url = '/api/positions';
+  return getFromFTX(path_url);
+}
+
+// https://docs.ftx.com/#get-open-orders
+async function getOpenOrders(market) {
+  const path_url = market ? `/api/orders?market=${market}` : '/api/orders';
+  return getFromFTX(path_url);
+}
+
+async function getOrderStatus(orderId) {
+  const path_url = `/api/orders/${orderId}`;
+  return getFromFTX(path_url);
+}
 
 // // https://docs.ftx.com/?javascript#get-order-history
-// async function getOrdersHistory() {
-//     try {
-//       const response = await axios.get(`${process.env.VUE_APP_ENDPOINT_URL}/api/orders/history`);
-//       console.log(response);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//     return response;
-// }
+async function getOrdersHistory() {
+  const path_url = '/api/orders/history';
+  return getFromFTX(path_url);
+}
 
-// async function getLimitOrdersHistory() {
-//     try {
-//       const response = await axios.get(`${process.env.VUE_APP_ENDPOINT_URL}/api/conditional_orders/history`);
-//       console.log(response);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//     return response;
-// }
+async function getLimitOrdersHistory() {
+  const path_url = '/api/conditional_orders/history';
+  return getFromFTX(path_url);
+}
 
-// async function getOpenOrdersByClientId(clientId) {
-//     try {
-//       const response = await axios.get(`${process.env.VUE_APP_ENDPOINT_URL}/api/orders/by_client_id/${clientId}`);
-//       console.log(response);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//     return response;
-// }
+async function getBalances() {
+  const path_url = '/api/wallet/balances';
+  return getFromFTX(path_url);
+}
 
-//  async function getOpenOrdersByClientId(clientId) {
-//     try {
-//       const response = await axios.get(`${process.env.VUE_APP_ENDPOINT_URL}/api/orders/by_client_id/${clientId}`);
-//       console.log(response);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//     return response;
-// }
 
 export default {
   getMarketPrice,
   getBtcPrice,
   getEthPrice,
   getUsdtPrice,
-  getOptionsPosition,
   getAccountInformation,
-  get24hOptionVolume,
+  getOrdersHistory,
+  getOrderStatus,
+  getBalances,
+
+  getPositions,
+  getLimitOrdersHistory,
+  getOpenOrders,
+  getOptionsPosition,
 }

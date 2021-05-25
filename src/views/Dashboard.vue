@@ -167,11 +167,8 @@
 
       <!--Tables-->
       <b-row class="mt-5">
-        <b-col xl="8" class="mb-5 mb-xl-0">
-          <page-visits-table></page-visits-table>
-        </b-col>
-        <b-col xl="4" class="mb-5 mb-xl-0">
-          <social-traffic-table></social-traffic-table>
+        <b-col xl="12" class="mb-12 mb-xl-0">
+          <page-visits-table :tableData=orderHistory></page-visits-table>
         </b-col>
       </b-row>
       <!--End tables-->
@@ -205,6 +202,7 @@
     },
     data() {
       return {
+        orderHistory: [],
         portfolioValue: 0,
         ethPrice: 0,
         btcPrice: 0,
@@ -242,10 +240,10 @@
         return (this.portfolioValue).toFixed(2)
       },
       portfolioValueInEth() {
-        return (this.portfolioValue / this.ethPrice).toFixed(2)
+        return (this.portfolioValue / this.ethPrice).toFixed(4)
       },
       portfolioValueInBtc() {
-        return (this.portfolioValue / this.btcPrice).toFixed(2)
+        return (this.portfolioValue / this.btcPrice).toFixed(4)
       },
     },
     methods: {
@@ -263,16 +261,35 @@
         this.bigLineChart.activeIndex = index;
       }
     },
-    mounted() {
+    created() {
       this.initBigChart(0)
-      ftx.getAccountInformation().then(() => {
-        this.portfolioValue = totalAccountValue
+      ftx.getAccountInformation().then((result) => {
+        console.log('getAccountInformation', result)
+        this.portfolioValue = result.totalAccountValue
+        this.positions = result.positions
       })
       ftx.getMarketPrice('BTC/USD').then((result) => {
         this.btcPrice = result.last
       })
       ftx.getMarketPrice('ETH/USD').then((result) => {
         this.ethPrice = result.last
+      })
+      ftx.getOrdersHistory().then((result) => {
+        console.log('getOrdersHistory', result)
+        this.orderHistory = result;
+      })
+      ftx.getOrderStatus('44328121254').then((result) => {
+        console.log('getOrderStatus 44328121254', result)
+      })
+
+      // ftx.getOptionsPosition().then((result) => {
+      //   console.log('getOptionsPosition', result)
+      // })
+      // ftx.getLimitOrdersHistory().then((result) => {
+      //   console.log('getLimitOrdersHistory', result)
+      // })
+      ftx.getBalances().then((result) => {
+        console.log('getBalances', result)
       })
     }
   };

@@ -3,11 +3,11 @@
   <b-card body-class="p-0" header-class="border-0">
     <template v-slot:header>
       <b-row align-v="center">
-        <b-col>
-          <h3 class="mb-0">Page visits</h3>
-        </b-col>
-        <b-col class="text-right">
-          <a href="#!" class="btn btn-sm btn-primary">See all</a>
+        <b-col class="text-left">
+          <a href="#!" class="btn btn-sm btn-primary">All orders</a>
+          <a href="#!" class="btn btn-sm btn-secondary">Open orders</a>
+          <a href="#!" class="btn btn-sm btn-secondary">Completed orders</a>
+          <a href="#!" class="btn btn-sm btn-secondary">Canceled orders</a>
         </b-col>
       </b-row>
     </template>
@@ -15,34 +15,79 @@
     <el-table class="table-responsive table"
               :data="tableData"
               header-row-class-name="thead-light">
-      <el-table-column label="Page name"
+      <el-table-column label="#"
+                       min-width="90px"
+                       prop="id">
+      </el-table-column>
+      <el-table-column label="Pair"
+                       min-width="90px"
+                       prop="market">
+      </el-table-column>
+      <el-table-column label="Side"
+                       min-width="90px"
+                       prop="side">
+      </el-table-column>
+      <el-table-column label="Price"
+                       min-width="90px"
+                       prop="avgFillPrice">
+        <template v-slot="{row}">
+          <div class="font-weight-600">{{row.avgFillPrice}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="Take Profit"
+                       min-width="120px"
+                       prop="takeProfit">
+        <template v-slot="{row}">
+          <div class="font-weight-600">{{row.takeProfit}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="Stop Loss"
+                       min-width="110px"
+                       prop="stopLoss">
+        <template v-slot="{row}">
+          <div class="font-weight-600">{{row.stopLoss}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="Portfolio (%)"
+                       min-width="140px"
+                       prop="portfolioPercentage">
+        <template v-slot="{row}">
+          {{row.portfolioPercentage}}
+        </template>
+      </el-table-column>
+      <el-table-column label="AVG P/L"
+                       min-width="110px"
+                       prop="realizedPnl">
+        <template v-slot="{row}">
+          {{row.avgProfitLoss}}
+        </template>
+      </el-table-column>
+      <el-table-column label="Weighted P/L"
+                       min-width="140px"
+                       prop="weightedProfitLoss">
+        <template v-slot="{row}">
+          {{row.weightedProfitLoss}}
+        </template>
+      </el-table-column>
+      <el-table-column label="R/R"
+                       min-width="90px"
+                       prop="rr">
+      </el-table-column>
+      <el-table-column label="Status"
                        min-width="130px"
-                       prop="page">
-        <template v-slot="{row}">
-          <div class="font-weight-600">{{row.page}}</div>
-        </template>
+                       prop="status">
       </el-table-column>
-      <el-table-column label="Visitors"
-                       min-width="70px"
-                       prop="visitors">
-      </el-table-column>
-      <el-table-column label="Unique users"
-                       min-width="90px"
-                       prop="unique">
-      </el-table-column>
-
-      <el-table-column label="Bounce rate"
-                       min-width="90px"
-                       prop="bounceRate">
-        <template v-slot="{row}">
-          {{row.bounceRate}}
-        </template>
+      <el-table-column label="Timestamp"
+                       min-width="120px"
+                       prop="createdAt">
       </el-table-column>
     </el-table>
   </b-card>
 </template>
 <script>
   import { Table, TableColumn, DropdownMenu, DropdownItem, Dropdown} from 'element-ui'
+  import ftx from '../../endpoints/ftx'
+
   export default {
     name: 'page-visits-table',
     components: {
@@ -52,41 +97,18 @@
       [DropdownItem.name]: DropdownItem,
       [DropdownMenu.name]: DropdownMenu,
     },
+    props: {
+      tableData: Array
+    },
     data() {
       return {
-        tableData: [
-          {
-            page: '/argon/',
-            visitors: '4,569',
-            unique: '340',
-            bounceRate: '46,53%'
-          },
-          {
-            page: '/argon/index.html',
-            visitors: '3,985',
-            unique: '319',
-            bounceRate: '46,53%'
-          },
-          {
-            page: '/argon/charts.html',
-            visitors: '3,513',
-            unique: '294',
-            bounceRate: '36,49%'
-          },
-          {
-            page: '/argon/tables.html',
-            visitors: '2,050',
-            unique: '147',
-            bounceRate: '50,87%'
-          },
-          {
-            page: '/argon/profile.html',
-            visitors: '1,795',
-            unique: '190',
-            bounceRate: '46,53%'
-          }
-        ]
       }
+    },
+    created() {
+      console.log('props', this.props)
+      ftx.getMarketPrice('STEP-PERP').then((result) => {
+        console.log(result)
+      })
     }
   }
 </script>
